@@ -34,12 +34,14 @@ class DirectoryTree:
                 if type(content[0]) is str: 
                     dir_name, subdirs, files = content
                     for f_name in files:
-                        #f = File(f_name, dir_name + f_name)
-                        print(f_name)
-                        #print(dir_name + f_name)
+                        rel_path = dir_name + "/" + f_name
+                        if rel_path.startswith(("~", "/")):
+                            rel_path = os.path.expanduser(rel_path)
+                        f = File(f_name, rel_path)
+                        print(f)
                 elif type(content[0]) is list:
                     subdirs, files = content
-                    print("Empty?")
+                    print("Missing dir_name.")
             except StopIteration:
                 print("The end.")
                 break
