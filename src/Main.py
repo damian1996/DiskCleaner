@@ -1,6 +1,7 @@
 from DirectoryTree import DirectoryTree
 import unittest, os
 from File import File
+from Disks import Disks
 
 def get_files_by_level(gen):
     while True:
@@ -38,10 +39,18 @@ def get_files_by_level2(gen):
             break
 
 if __name__ == '__main__':
-    tree = DirectoryTree("~/Documents")
-    gen = tree.walklevel(depth=1)
-    #gen = tree.walklevel("~/Documents", depth=1)
-    #get_files_by_level(gen)
-    get_files_by_level2(gen)
-    #gen2 = tree.get_recursive_content_of_directory("~/Documents")
-    #get_files_by_level(gen2)
+    #tree = DirectoryTree("~/Documents")
+    #gen = tree.walklevel(depth=1)
+    #get_files_by_level2(gen)
+
+    d = Disks()
+    #print(d.get_partitions())
+    #d.disk_usage_for_partitions()
+
+    gen = d.get_partitions()
+    while True:
+        try:
+            partition = next(gen)
+            print(partition)
+        except StopIteration:
+            break
