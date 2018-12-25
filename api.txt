@@ -24,6 +24,9 @@ DirectoryTree(path) - constructor creating tree which gets destination for root 
 
 walklevel(path) - generating (by generator) a content (shallow with computed sizes) for given path source
 
+remove_file(path)
+
+remove_directory(path)
 
 
 File(name, path, size, parent_size) - the constructor creating File object with needed information (specified in get_file_info())

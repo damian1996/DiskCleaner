@@ -71,3 +71,10 @@ class File:
         all_files_in_dir = len(os.listdir(self.path))
         onlyfiles = sum(os.path.isfile(os.path.join(self.path, f)) for f in os.listdir(self.path))
         return onlyfiles, all_files_in_dir - onlyfiles
+
+    def decrease_sizes(self, to_decrease):
+        self.size -= to_decrease
+        self.parent_size -= to_decrease
+
+    def delete_child(self, index):
+        del self.next_files[index]
