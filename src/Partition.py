@@ -4,15 +4,17 @@ class Partition:
     def __init__(self, partition_info, partition_usage):
         self.device = partition_info.device
         self.mountpoint = partition_info.mountpoint
-        self.fstype = partition_info.fstype
         self.total = partition_usage.total
         self.used = partition_usage.used
         self.free = partition_usage.free
         self.percents_usage = partition_usage.percent
     
     def __repr__(self):
-        return 'Device {}, mounted at {} in filesystem of type {}. Used memory is {}% of {} bytes' \
-            .format(self.device, self.mountpoint, self.fstype, self.percents_usage, self.total)
+        return 'Device {}, mounted at {}. Used memory is {}% of {} bytes' \
+            .format(self.device, self.mountpoint, self.percents_usage, self.total)
+
+    def get_name(self):
+        return self.device
 
     def get_mountpoint(self):
         return self.mountpoint

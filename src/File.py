@@ -1,12 +1,12 @@
 import os, time
 
 class File:
-    def __init__(self, name, path, size, parent_size):
+    def __init__(self, name, path):
         self.name = name
         self.path = path
         self.file_type = os.path.isfile(path)
-        self.size = size
-        self.parent_size = parent_size
+        self.size, self.parent_size = 0, 0
+        self.next_files = []
 
     def __repr__(self):
         return "File {}".format(self.name)
@@ -28,6 +28,18 @@ class File:
             "count_subdirectories": count_subdirs,
             "size_parent_directory": self.parent_size,          
         }
+
+    def get_children(self):
+        return self.next_files
+
+    def set_size(self, size):
+        self.size = size
+
+    def set_parent_size(self, parent_size):
+        self.parent_size = parent_size
+
+    def add_next_child(self, file):
+        self.next_files.append(file)
 
     def get_last_modified_time(self):
         return self.convert_epoch_time_to_date(os.path.getmtime(self.path))

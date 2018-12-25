@@ -1,0 +1,50 @@
+Disks() - constructor
+
+get_partitions() - generator yielding following get_partitions
+
+
+
+Partition(*args, **kwargs) - uneccessary for you
+
+get_name() - returns name of partition/device
+
+get_mountpoint() - returns mountpoint for partition
+
+get_total() - returns total for partition
+
+get_free_memory() - returns free memory for partition
+
+get_used_memory() - returns used memory for partition
+
+get_used_memory_in_percents() - returns used memory for partition in percents
+
+
+
+DirectoryTree(path) - constructor creating tree which gets destination for root of created tree
+
+walklevel(path) - generating (by generator) a content (shallow with computed sizes) for given path source
+
+
+
+File(name, path, size, parent_size) - the constructor creating File object with needed information (specified in get_file_info())
+
+get_file_info() - returns information about file mentioned below as dictionary(name, path, type, size, size_parent_directory,
+    when_created, last_modified, last_access, count_files, count_subdirectories)
+
+get_last_modified_time() - last modification time for file/directory
+
+get_creation_time() - creation time for file/directory
+
+get_last_opened_time() - last opened time for file/directory
+
+get_name() - returns name of file
+
+get_path() - returns path for file
+
+get_file_type() - info about type (directory/file)
+
+get_size() - size of file/directory
+
+get_size_parent_directory() - size of parent directory for file
+
+get_children() - get children of file/directory
