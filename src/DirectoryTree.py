@@ -5,44 +5,39 @@ from File import File
 class DirectoryTree:
     def __init__(self, path):
         self.path = expanduser(path) if path.startswith(("~", "/")) else path
-        self.files = {}
-        self.root = self.get_mapped_paths_with_sizes(self.get_parent(self.path))
+        self.root, self.files = self.create_tree_with_computed_sizes(self.path)
 
-    def get_size_directory_with_mapping(self, path, f):
-        dir_entries = os.listdir(path)
-        dir_size = 0
-        for entry in dir_entries:
-            next_path = os.path.abspath(os.path.join(path, entry))
-            if self.file_to_skip(next_path):
-                continue
-            next_file = File(entry, next_path)
-            if os.path.isfile(next_path):
+    def create_tree_with_computed_sizes(self, path):
+        files_dict = {}
+        for dirname, subdirs, files in os.walk(path, topdown=False):
+            root = File(dirname)
+            dir_size = 0
+            for entry in files:
+                next_path = os.path.abspath(os.path.join(dirname, entry))
+                if self.file_to_skip(next_path):
+                    continue
+                next_file = File(next_path)
                 child_size = os.path.getsize(next_path)
                 next_file.set_size(child_size)
                 dir_size += child_size
-            elif os.path.isdir(next_path):
-                child_size = self.get_size_directory_with_mapping(next_path, next_file)                
-                next_file.set_size(child_size)
-                dir_size += child_size
+                root.add_next_child(next_file)
+                files_dict[next_path] = next_file
 
-            f.add_next_child(next_file)
-            self.files[next_path] = next_file
+            for entry in subdirs:
+                next_path = os.path.abspath(os.path.join(dirname, entry))
+                if self.file_to_skip(next_path):
+                    continue
+                next_file = files_dict[next_path]
+                dir_size += next_file.get_size()
+                root.add_next_child(next_file)
 
-        for subfile in f.get_children():
-            subfile.set_parent_size(dir_size)
+            root.set_size(dir_size)
+            for child in root.get_children():
+                child.set_parent_size(dir_size)
+            files_dict[dirname] = root
         
-        return dir_size
-
-    def get_mapped_paths_with_sizes(self, path):
-        root = File(path.split('/')[-1], path)
-        root_size = self.get_size_directory_with_mapping(path, root)
-        root.set_size(root_size)
-        print(path, " ", self.path)
-        print(path, " ", root.get_size())
-        root.set_parent_size(root.get_size()) if path == '/' and self.path == '/' else root.set_parent_size(0)
-        print(root)
-        self.files[path] = root
-        return root
+        files_dict[path].set_parent_size(0)
+        return files_dict[path], files_dict
 
     def check_access(self, path):
         return os.access(path, os.R_OK)

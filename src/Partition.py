@@ -19,7 +19,7 @@ class Partition:
     def get_mountpoint(self):
         return self.mountpoint
 
-    def get_size(self):
+    def get_total_size(self):
         return self.total
     
     def get_free_memory(self):

@@ -6,19 +6,13 @@ class Disks:
         self.partitions = self.create_partitions_info()
     
     def find_partitions(self):
-        partitions = ps.disk_partitions()
-        partitions = [prt for prt in partitions if not prt.mountpoint.startswith('/snap')]
-        return partitions
+        return [prt for prt in ps.disk_partitions() if not prt.mountpoint.startswith('/snap')]
 
     def disk_usage_for_partitions(self):
-        partitions = self.find_partitions()
-        partitions_usage = [ps.disk_usage(prt.mountpoint) for prt in partitions]
-        return list(zip(partitions, partitions_usage))
+        return [(prt, ps.disk_usage(prt.mountpoint)) for prt in self.find_partitions()]
 
     def create_partitions_info(self):
-        info = self.disk_usage_for_partitions()
-        return [Partition(partition, usage) for partition, usage in info]
+        return [Partition(partition, usage) for partition, usage in self.disk_usage_for_partitions()]
 
     def get_partitions(self):
-        for prt in self.partitions:
-            yield prt
+        return self.partitions

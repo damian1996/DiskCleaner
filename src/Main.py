@@ -13,21 +13,14 @@ def get_files_by_level2(gen):
             break
 
 if __name__ == '__main__':
-    tree = DirectoryTree("/home/damian")
-    gen = tree.walklevel()
+    tree = DirectoryTree("/home/damian/Desktop/")
+    gen = tree.walklevel('/home/damian/Desktop/')
     get_files_by_level2(gen)
-    #tree.remove_file("/home/damian/Desktop/stable_version")
-    tree.remove_directory("/home/damian/Downloads/sort")
-    '''
+    tree.remove_file("/home/damian/Desktop/out")
+    #tree.remove_directory("/home/damian/Downloads/sort")
     d = Disks()
     print(d.get_partitions())
     d.disk_usage_for_partitions()
 
-    gen = d.get_partitions()
-    while True:
-        try:
-            partition = next(gen)
-            print(partition)
-        except StopIteration:
-            break
-    '''
+    for prt in d.get_partitions():
+        print(prt)
