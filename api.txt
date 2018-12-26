@@ -1,53 +1,39 @@
+DISKS
 Disks() - constructor
-
-get_partitions() - generator yielding following get_partitions
-
+get_partitions() - list of Partitions
 
 
+PARTITION
 Partition(*args, **kwargs) - uneccessary for you
-
 get_name() - returns name of partition/device
-
 get_mountpoint() - returns mountpoint for partition
-
 get_total_size() - returns total size for partition
-
 get_free_memory() - returns free memory for partition
-
 get_used_memory() - returns used memory for partition
-
 get_used_memory_in_percents() - returns used memory for partition in percents
 
 
+UTILS
+convert_epoch_time_to_date(epoch_time) - convert epoch time to string representation of date
 
+
+DIRECTORYTREE
 DirectoryTree(path) - constructor creating tree which gets destination for root of created tree
+walklevel(path) - return list of Files (children of path)
+remove_tree_node(path) - removing file/directory
+check_access(path) - if file/dirctory is accessible
 
-walklevel(path) - generating (by generator) a content (shallow with computed sizes) for given path source
-
-remove_file(path)
-
-remove_directory(path)
-
-
-File(name, path, size, parent_size) - the constructor creating File object with needed information (specified in get_file_info())
-
-get_file_info() - returns information about file mentioned below as dictionary(name, path, type, size, parent_directory_size,
-    when_created, last_modified, last_access, files_count, subdirectories_count)
-
+FILE
+File(path) - the constructor creating File object with needed information (specified in get_file_info())
+get_file_info() - returns information about file mentioned below as dictionary(name, path, is_file, size, parent_directory_size,
+    creation_date, last_modified, last_access, files_count, subdirectories_count)
 get_last_modified_date_in_seconds() - last modification date for file/directory in seconds
-
 get_creation_date_in_seconds() - creation date for file/directory in seconds
-
 get_last_opened_date_in_seconds() - last opened date for file/directory in seconds
-
 get_name() - returns name of file
-
 get_path() - returns path for file
-
-get_file_type() - info about type (directory/file)
-
+if_is_file() - info if path is file or directory
 get_size() - size of file/directory
-
 get_size_parent_directory() - size of parent directory for file
-
 get_children() - get children of file/directory
+count_files_and_subdirs() - number of files and subdirs in path

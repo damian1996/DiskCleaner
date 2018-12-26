@@ -16,7 +16,7 @@ class File:
         return {
             "name": self.get_name(),
             "path": self.get_path(),
-            "type": self.if_is_file(),
+            "is_file": self.if_is_file(),
             "size": self.size,
             "creation_date": self.get_creation_date_in_seconds(),
             "last_modified": self.get_last_modified_date_in_seconds(),
