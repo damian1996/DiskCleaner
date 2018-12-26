@@ -7,7 +7,8 @@ class DirectoryTree:
         self.path = expanduser(path) if path.startswith(("~", "/")) else path
         self.root, self.files = self.create_tree_with_computed_sizes(self.path)
 
-    def traverse_files(self, root, dirname, dir_size, files, storage_for_files):
+    def traverse_files(self, root, dirname, files, storage_for_files):
+        sum_sizes_of_files = 0
         for entry in files:
             next_path = os.path.abspath(os.path.join(dirname, entry))
             if self.is_file_to_skip(next_path):
@@ -18,18 +19,19 @@ class DirectoryTree:
             root.add_next_child(next_file)
             storage_for_files[next_file.get_path()] = next_file
             root.add_next_child(next_file)
-            dir_size += next_file.get_size()
-        return dir_size
+            sum_sizes_of_files += next_file.get_size()
+        return sum_sizes_of_files
 
-    def traverse_subdirs(self, root, dirname, dir_size, subdirs, storage_for_files):
+    def traverse_subdirs(self, root, dirname, subdirs, storage_for_files):
+        sum_sizes_of_subdirs = 0
         for entry in subdirs:
             next_path = os.path.abspath(os.path.join(dirname, entry))
             if self.is_file_to_skip(next_path):
                 continue
             next_file = storage_for_files[next_path]
-            dir_size += next_file.get_size()
+            sum_sizes_of_subdirs += next_file.get_size()
             root.add_next_child(next_file)
-        return dir_size
+        return sum_sizes_of_subdirs
 
     def set_parent_size_for_children(self, root, dir_size):
         for child in root.get_children():
@@ -40,8 +42,8 @@ class DirectoryTree:
         for dirname, subdirs, files in os.walk(path, topdown=False):
             root = File(dirname)
             dir_size = 0
-            dir_size = self.traverse_files(root, dirname, dir_size, files, storage_for_files)
-            dir_size = self.traverse_subdirs(root, dirname, dir_size, subdirs, storage_for_files)
+            dir_size += self.traverse_files(root, dirname, files, storage_for_files)
+            dir_size += self.traverse_subdirs(root, dirname, subdirs, storage_for_files)
             self.set_parent_size_for_children(root, dir_size)
             root.set_size(dir_size)
             storage_for_files[dirname] = root
