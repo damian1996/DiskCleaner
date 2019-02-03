@@ -2,16 +2,20 @@ from DirectoryTree import DirectoryTree
 import unittest, os
 from File import File
 from Disks import Disks
-from Utils import get_files_to_delete
+from Utils import get_files_to_delete, get_human_readable_size
 
-def get_files_by_level2(gen):
-    for file in gen:
-        print(file.get_file_info())
+def get_files_by_level2(files):
+    for f in files:
+        print(f.get_file_info())
         print()
+
+def get_readable_sizes(files):
+    for f in files:
+        print(get_human_readable_size(f))
 
 if __name__ == '__main__':
     tree = DirectoryTree("~/Desktop/ml2018-19")
-    gen = tree.walklevel('~/Desktop/ml2018-19')
+    files = tree.walklevel('~/Desktop/ml2018-19')
     #get_files_by_level2(gen)
     
     #tree.remove_tree_node("/home/damian/Downloads/4B.cpp")
@@ -23,6 +27,7 @@ if __name__ == '__main__':
     mode = 'days'
     files_to_remove = get_files_to_delete(tree.get_root(), number_files_to_remove, in_past, mode)
     get_files_by_level2(files_to_remove)
+    get_readable_sizes(files_to_remove)
 
     d = Disks()
     print(d.get_partitions())

@@ -4,6 +4,14 @@ from copy import deepcopy
 def convert_epoch_time_to_date(epoch_time):
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(epoch_time))
 
+def get_human_readable_size(node):
+    next_boundaries = [(1e+3, 1, "B"), (1e+6, 1e+3, "kB"), (1e+9, 1e+6, "MB")]
+    readable_size = node.get_size()
+    for boundary, divider, unit in next_boundaries:
+        if readable_size < boundary:
+            return "{} {}".format(round(readable_size/divider, 2), unit)    
+    return "{} {}".format(round(readable_size/1e+9, 2), "GB")
+
 def sort_files_by_opening_date(files, desc=False):
     f = lambda x: x.get_last_opened_date_in_seconds()
     files_to_sort = deepcopy(files)
