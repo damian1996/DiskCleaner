@@ -31,24 +31,61 @@ def sort_files_by_size(files, desc=False):
     return files_to_sort
 
 def get_files_fulfilling_condition(node, predicate, date_bound, curr_time, mode, all_files):
-    last_opened_in_sec = node.get_last_opened_date_in_seconds()
-    last_opened_time = datetime.datetime.utcfromtimestamp(last_opened_in_sec)
+    last_modified_in_sec = node.get_last_modified_date_in_seconds()
+    last_modified_time = datetime.datetime.utcfromtimestamp(last_modified_in_sec)
     if mode == 'days':
-        last_opened_time = last_opened_time + datetime.timedelta(days=+date_bound)
-    elif mode == 'month':
-        last_opened_time = last_opened_time + relativedelta(months=+date_bound)
+        last_modified_time = last_modified_time + datetime.timedelta(days=+date_bound)
+    elif mode == 'months':
+        last_modified_time = last_modified_time + relativedelta(months=+date_bound)
     
     if not node.if_is_file():
         for child in node.get_children():
             get_files_fulfilling_condition(child, predicate, date_bound, curr_time, mode, all_files)
-    elif predicate(last_opened_time, curr_time):
+    elif predicate(last_modified_time, curr_time):
         all_files.append(node)
 
 def get_files_to_delete(root, number_files_to_remove, date_bound, mode):
     all_files = []
     curr_time = datetime.datetime.now()
-    predicate = lambda node_time, curr_time: node_time > curr_time
+    predicate = lambda node_time, curr_time: node_time < curr_time
     get_files_fulfilling_condition(root, predicate, date_bound, curr_time, mode, all_files)
+    if len(all_files) < number_files_to_remove:
+        return all_files
+    else:
+        files_sorted_by_size = sort_files_by_size(all_files, desc=True)
+        return files_sorted_by_size[:number_files_to_remove]
+
+def get_list_of_files_objects_older_than_date(node, predicate, bound_date, all_files):
+    if node.if_is_file():
+        last_modified_in_sec = node.get_last_modified_date_in_seconds()
+        last_modified_time = datetime.datetime.utcfromtimestamp(last_modified_in_sec)
+        if predicate(last_modified_time, bound_date):
+            all_files.append(node)
+            return True
+        return False
+    else:
+        size_before = len(all_files)
+        are_older = True
+        for child in node.get_children():
+            is_subdir_older = get_list_of_files_objects_older_than_date(child, predicate, bound_date, all_files)
+            are_older = are_older and is_subdir_older
+        if are_older:
+            for i in range(size_before, len(all_files)):
+                all_files.pop()
+            all_files.append(node)
+            return True
+        return False
+
+def get_files_and_dirs_to_delete(root, number_files_to_remove, date_bound, mode):
+    all_files = []
+    curr_time = datetime.datetime.now()
+    if mode == 'days':
+        bound_date = curr_time + datetime.timedelta(days=-date_bound)
+    elif mode == 'months':
+        bound_date = curr_time + relativedelta(months=-date_bound)
+    predicate = lambda node_time, bound_date: node_time < bound_date
+
+    get_list_of_files_objects_older_than_date(root, predicate, bound_date, all_files)
     if len(all_files) < number_files_to_remove:
         return all_files
     else:
