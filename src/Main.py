@@ -2,7 +2,8 @@ from DirectoryTree import DirectoryTree
 import unittest, os
 from File import File
 from Disks import Disks
-from Utils import get_files_to_delete, get_files_and_dirs_to_delete, get_human_readable_size
+from Utils import get_files_and_dirs_to_delete, get_human_readable_size
+from dateutil.relativedelta import relativedelta
 
 def get_files_by_level2(files):
     for f in files:
@@ -24,14 +25,10 @@ if __name__ == '__main__':
 
     print("FILES TO REMOVE")
     number_files_to_remove = 5
-    in_past = 17
-    mode = 'days'
-    files_to_remove = get_files_to_delete(tree.get_root(), number_files_to_remove, in_past, mode)
-    print(files_to_remove)
-    get_files_by_level2(files_to_remove)
-    get_readable_sizes(files_to_remove)
-    print()
-    files_and_dirs_to_remove = get_files_and_dirs_to_delete(tree.get_root(), number_files_to_remove, in_past, mode)
+    in_past = 13
+    sec = relativedelta(days=-in_past)
+
+    files_and_dirs_to_remove = get_files_and_dirs_to_delete(tree.get_root(), number_files_to_remove, sec)
     print(files_and_dirs_to_remove)
     get_files_by_level2(files_and_dirs_to_remove)
     get_readable_sizes(files_and_dirs_to_remove)

@@ -1,7 +1,6 @@
 import os, sys, shutil
 from os.path import expanduser
 from File import File
-from copy import deepcopy
 
 class DirectoryTree:
     def __init__(self, path):
@@ -9,7 +8,7 @@ class DirectoryTree:
         self.root, self.files = self.create_tree_with_computed_sizes(self.path)
 
     def get_root(self):
-        return deepcopy(self.root)
+        return self.root
 
     def traverse_files(self, root, dirname, files, storage_for_files):
         sum_sizes_of_files = 0
