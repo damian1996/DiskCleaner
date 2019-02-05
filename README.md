@@ -1,7 +1,7 @@
 # DiskCleaner
 
-sudo pip install psutil
+### Tool for managing unneeded files in your disk 
 
-or
-
-conda install psutil
+### Authors:
+- Angelika Serwa
+- Damian Stachura
