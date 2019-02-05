@@ -7,6 +7,9 @@ class DirectoryTree:
         self.path = expanduser(path) if path.startswith(("~", "/")) else path
         self.root, self.files = self.create_tree_with_computed_sizes(self.path)
 
+    def get_root(self):
+        return self.root
+
     def traverse_files(self, root, dirname, files, storage_for_files):
         sum_sizes_of_files = 0
         for entry in files:
@@ -18,7 +21,6 @@ class DirectoryTree:
             next_file.set_size(child_size)
             root.add_next_child(next_file)
             storage_for_files[next_file.get_path()] = next_file
-            root.add_next_child(next_file)
             sum_sizes_of_files += next_file.get_size()
         return sum_sizes_of_files
 
@@ -96,3 +98,7 @@ class DirectoryTree:
             raise KeyError('File {} does not exists'.format(path.split('/')[-1]))
         except Exception as e:
             raise Exception(e)
+    
+    def remove_tree_nodes(self, nodes):
+        for node in nodes:
+            self.remove_tree_node(node.get_path())
