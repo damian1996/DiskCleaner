@@ -98,3 +98,7 @@ class DirectoryTree:
             raise KeyError('File {} does not exists'.format(path.split('/')[-1]))
         except Exception as e:
             raise Exception(e)
+    
+    def remove_tree_nodes(self, nodes):
+        for node in nodes:
+            self.remove_tree_node(node.get_path())
