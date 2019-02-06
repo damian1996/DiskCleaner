@@ -61,7 +61,7 @@ class FilesTreeWidget(BoxLayout):
         self.add_widget(scroll_view)
     
     def load_func(self, tv, node):
-        if node is None:
+        if node is None or not isinstance(node, FileTreeViewLabel):
             dir = self.tree.root
         else:
             dir = node.get_dir()
