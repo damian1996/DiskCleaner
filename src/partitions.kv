@@ -1,0 +1,31 @@
+#:kivy 1.10
+
+<PartitionsScreen>:
+    BoxLayout:
+        id: box_layout
+        orientation: 'vertical'
+
+<PartitionWidget>:
+    cols: 2
+    padding: 50
+    canvas:
+        Color:
+            rgba: 1, .3, .8, .5
+        Line:
+            rectangle: [root.pos[0], root.pos[1], root.size[0], root.size[1]]
+    Label:
+        text: "Partition:"
+    Label:
+        text: root.partition
+    Label:
+        text: "Mountpoint:"
+    Label:
+        text: root.mountpoint
+    Label:
+        text: "Used:"
+    Label:
+        text: root.used
+    Label:
+        text: "Free:"
+    Label:
+        text: root.free
