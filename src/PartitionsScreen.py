@@ -52,8 +52,8 @@ class PartitionsScreen(Screen):
     
     def give_propositions(self, btn):
         bx = BoxLayout(orientation="vertical")
-        tree = DirectoryTree("~/Downloads/programy")
-        propositions = get_files_and_dirs_to_delete(tree.root, 5, relativedelta(months=-6))
+        tree = DirectoryTree(self.file_chooser.path)
+        propositions = get_files_and_dirs_to_delete(tree.root, 5, relativedelta(days=-20))
         bx.add_widget(Label(text="Found the following files:\n{}".format('\n'.join([file.get_path() for file in propositions]))))
         buttons = BoxLayout()
         popup = None
