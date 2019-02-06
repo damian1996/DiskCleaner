@@ -13,6 +13,7 @@ from Disks import Disks
 from Utils import get_files_and_dirs_to_delete
 from dateutil.relativedelta import relativedelta
 
+
 class PartitionWidget(GridLayout):
     partition = StringProperty()
     mountpoint = StringProperty()
@@ -23,8 +24,11 @@ class PartitionWidget(GridLayout):
         super().__init__()
         self.partition = partition.get_name()
         self.mountpoint = partition.get_mountpoint()
-        self.used = "{} bytes ({}%)".format(partition.get_used_memory(), partition.get_used_memory_in_percents())
+        self.used = "{} bytes ({}%)".format(
+            partition.get_used_memory(),
+            partition.get_used_memory_in_percents())
         self.free = "{} bytes".format(partition.get_free_memory())
+
 
 class PartitionsScreen(Screen):
     def __init__(self, **kwargs):
@@ -40,29 +44,40 @@ class PartitionsScreen(Screen):
         self.file_chooser = FileChooserListView()
         file_chooser_layout.add_widget(self.file_chooser)
         buttons_box_layout = BoxLayout()
-        buttons_box_layout.add_widget(Button(text="Run cleaner on selected directory", on_press=self.on_run_btn_press))
-        buttons_box_layout.add_widget(Button(text="Give me some propositions", on_press=self.give_propositions))
+        buttons_box_layout.add_widget(Button(
+            text="Run cleaner on selected directory",
+            on_press=self.on_run_btn_press))
+        buttons_box_layout.add_widget(Button(
+            text="Give me some propositions",
+            on_press=self.give_propositions))
         file_chooser_layout.add_widget(buttons_box_layout)
         box_layout.add_widget(file_chooser_layout)
         self.add_widget(box_layout)
-    
+
     def on_run_btn_press(self, btn):
         self.manager.current = 'files'
         self.manager.current_screen.start_file_search(self.file_chooser.path)
-    
+
     def give_propositions(self, btn):
         bx = BoxLayout(orientation="vertical")
         tree = DirectoryTree(self.file_chooser.path)
-        propositions = get_files_and_dirs_to_delete(tree.root, 5, relativedelta(days=-20))
-        bx.add_widget(Label(text="Found the following files:\n{}".format('\n'.join([file.get_path() for file in propositions]))))
+        propositions = get_files_and_dirs_to_delete(
+            tree.root, 5, relativedelta(days=-20))
+        bx.add_widget(Label(text="Found the following files:\n{}".format(
+            '\n'.join([file.get_path() for file in propositions]))))
         buttons = BoxLayout()
         popup = None
-        buttons.add_widget(Button(text="Cancel", on_press=lambda btn: popup.dismiss()))
+        buttons.add_widget(Button(
+            text="Cancel",
+            on_press=lambda btn: popup.dismiss()))
+
         def on_delete_btn_press(btn):
             tree.remove_tree_nodes(propositions)
             popup.dismiss()
-        buttons.add_widget(Button(text="Delete them!", on_press=on_delete_btn_press))
+
+        buttons.add_widget(Button(
+            text="Delete them!",
+            on_press=on_delete_btn_press))
         bx.add_widget(buttons)
         popup = Popup(title='Propositions', content=bx)
         popup.open()
-        
