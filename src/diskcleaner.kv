@@ -1,0 +1,25 @@
+#:kivy 1.10
+
+<FileTreeViewLabel>:
+    padding: [50, 0, 50, 0]
+    height: 24
+    spacing: 10
+    Label:
+        id: filename
+        text: root.file_name
+        markdown: True
+        shorten: True
+        text_size: (root.size[0]/2, None)
+        size_hint_y: 1
+    BoxLayout:
+        spacing: 10
+        Label:
+            id: size
+            text: root.file_size
+            size_hint_y: 1
+        ProgressBar:
+            max: 1
+            value: root.file_size_percent
+        Button:
+            text: "delete"
+            on_press: root.on_delete_button_press()
