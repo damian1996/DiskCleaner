@@ -1,5 +1,6 @@
 import psutil as ps
 
+
 class Partition:
     def __init__(self, partition_info, partition_usage):
         self.device = partition_info.device
@@ -8,10 +9,11 @@ class Partition:
         self.used = partition_usage.used
         self.free = partition_usage.free
         self.percents_usage = partition_usage.percent
-    
+
     def __repr__(self):
         return 'Device {}, mounted at {}. Used memory is {}% of {} bytes' \
-            .format(self.device, self.mountpoint, self.percents_usage, self.total)
+            .format(
+                self.device, self.mountpoint, self.percents_usage, self.total)
 
     def get_name(self):
         return self.device
@@ -21,7 +23,7 @@ class Partition:
 
     def get_total_size(self):
         return self.total
-    
+
     def get_free_memory(self):
         return self.free
 

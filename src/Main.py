@@ -34,14 +34,14 @@ if __name__ == '__main__':
     print(files_and_dirs_to_remove)
     get_files_by_level2(files_and_dirs_to_remove)
     get_readable_sizes(files_and_dirs_to_remove)
-
+    '''
     tree.remove_tree_nodes(files_and_dirs_to_remove)
 
     files_and_dirs_to_remove = get_files_and_dirs_to_delete(tree.get_root(), number_files_to_remove, sec)
     print(files_and_dirs_to_remove)
     get_files_by_level2(files_and_dirs_to_remove)
     get_readable_sizes(files_and_dirs_to_remove)
-
+    '''
     d = Disks()
     print(d.get_partitions())
     d.disk_usage_for_partitions()

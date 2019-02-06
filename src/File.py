@@ -1,4 +1,6 @@
-import os, time
+import os
+import time
+
 
 class File:
     def __init__(self, path):
@@ -23,7 +25,7 @@ class File:
             "last_access": self.get_last_opened_date_in_seconds(),
             "files_count": files_count,
             "subdirectiories_count": count_subdirs,
-            "parent_directory_size": self.parent_size,          
+            "parent_directory_size": self.parent_size
         }
 
     def get_children(self):
@@ -55,7 +57,7 @@ class File:
 
     def if_is_file(self):
         return self.is_file
-    
+
     def get_size(self):
         return self.size
 
@@ -65,7 +67,7 @@ class File:
     def count_files_and_subdirs(self):
         if self.if_is_file():
             return 0, 0
-        
+
         onlyfiles = sum(child.if_is_file() for child in self.next_files)
         return onlyfiles, len(self.next_files) - onlyfiles
 

@@ -1,6 +1,9 @@
-import os, sys, shutil
+import os
+import sys
+import shutil
 from os.path import expanduser
 from File import File
+
 
 class DirectoryTree:
     def __init__(self, path):
@@ -44,12 +47,13 @@ class DirectoryTree:
         for dirname, subdirs, files in os.walk(path, topdown=False):
             root = File(dirname)
             dir_size = 0
-            dir_size += self.traverse_files(root, dirname, files, storage_for_files)
-            dir_size += self.traverse_subdirs(root, dirname, subdirs, storage_for_files)
+            dir_size += self.traverse_files(
+                root, dirname, files, storage_for_files)
+            dir_size += self.traverse_subdirs(
+                root, dirname, subdirs, storage_for_files)
             self.set_parent_size_for_children(root, dir_size)
             root.set_size(dir_size)
             storage_for_files[dirname] = root
-        
         storage_for_files[path].set_parent_size(0)
         return storage_for_files[path], storage_for_files
 
@@ -71,9 +75,9 @@ class DirectoryTree:
         path_copy = str(path)
         while path_copy != '/':
             path_copy = os.path.abspath(os.path.join(path_copy, '..'))
-            if not path_copy in keys:
+            if path_copy not in keys:
                 break
-            self.files[path_copy].decrease_sizes(size_of_removed_node) 
+            self.files[path_copy].decrease_sizes(size_of_removed_node)
 
     def delete_node_from_children_of_parent(self, path, node_to_remove, keys):
         name = node_to_remove.get_name()
@@ -87,18 +91,26 @@ class DirectoryTree:
     def remove_tree_node(self, path):
         try:
             if not self.check_access(path):
-                raise Exception('You don\'t have access to {} or file does not exists'.format(path))
+                raise Exception(
+                    'You don\'t have access to {} or file does not exists'
+                    .format(path))
             node_to_remove = self.files[path]
             size_of_removed_node = node_to_remove.get_size()
             keys = self.files.keys()
-            self.update_tree_upwards(path, keys, size_of_removed_node)
-            self.delete_node_from_children_of_parent(path, node_to_remove, keys)
-            os.remove(path) if node_to_remove.if_is_file() else shutil.rmtree(path)
+            self.update_tree_upwards(
+                path, keys, size_of_removed_node)
+            self.delete_node_from_children_of_parent(
+                path, node_to_remove, keys)
+            if node_to_remove.if_is_file():
+                os.remove(path)
+            else:
+                shutil.rmtree(path)
         except KeyError:
-            raise KeyError('File {} does not exists'.format(path.split('/')[-1]))
+            raise KeyError(
+                'File {} does not exists'.format(path.split('/')[-1]))
         except Exception as e:
             raise Exception(e)
-    
+
     def remove_tree_nodes(self, nodes):
         for node in nodes:
             self.remove_tree_node(node.get_path())
